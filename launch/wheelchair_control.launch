@@ -1,0 +1,10 @@
+<launch>
+    <param name="robot_description" command="$(find xacro)/xacro.py '$(find wheelchair_description)/models/wheelchair.xacro'" />
+
+    <include file="$(find openni_launch)/launch/openni.launch" />
+
+    <node pkg="rosserial_python" type="serial_node.py" name="wheelchair">
+        <param name="port" value="/dev/ttyUSB0" type="string" />
+    </node>
+    <node pkg="robot_state_publisher" type="robot_state_publisher" name="wheelchair_state_publisher" />
+</launch>
