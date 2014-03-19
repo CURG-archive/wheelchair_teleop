@@ -1,10 +1,25 @@
 <launch>
     <param name="robot_description" command="$(find xacro)/xacro.py '$(find wheelchair_description)/models/wheelchair.xacro'" />
 
-    <include file="$(find openni_launch)/launch/openni.launch" />
+    <include file="$(find openni_launch)/launch/openni.launch">
+        <arg name="depth_registration" value="true" />
+    </include>
 
-    <node pkg="rosserial_python" type="serial_node.py" name="wheelchair">
-        <param name="port" value="/dev/ttyUSB0" type="string" />
+    <group ns="wheelchair">
+        <node pkg="rosserial_python" type="serial_node.py" name="wheelchair">
+            <param name="port" value="/dev/serial/by-id/usb-FTDI_FT232R_USB_UART_A600en1z-if00-port0" type="string" />
+        </node>
+        <node pkg="kinect_aux" type="kinect_aux_node" name="kinect_aux" />
+        <node pkg="wheelchair_teleop" type="wheelchair_node" name="wheelchair_node">
+            <param name="decay_constant" value="0.001" />
+            <param name="offset" value="-0.08" />
+        </node>
+    </group>
+
+    <node pkg="joint_state_publisher" type="joint_state_publisher" name="joint_state_publisher">
+        <rosparam param="source_list">["/wheelchair/wheelchair_node/kinect_joint_state"]</rosparam>
+        <rosparam param="zeros">{"kinect_joint": 0.5}</rosparam>
     </node>
+
     <node pkg="robot_state_publisher" type="robot_state_publisher" name="wheelchair_state_publisher" />
 </launch>

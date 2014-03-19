@@ -97,6 +97,7 @@ include_directories(include)
 
 ## Declare a cpp executable
 add_executable(wheelchair_teleop_joy_node src/joystick_teleop.cc)
+add_executable(wheelchair_node src/wheelchair_node.cc)
 
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
@@ -104,6 +105,9 @@ add_executable(wheelchair_teleop_joy_node src/joystick_teleop.cc)
 
 ## Specify libraries to link a library or executable target against
 target_link_libraries(wheelchair_teleop_joy_node
+  ${catkin_LIBRARIES}
+)
+target_link_libraries(wheelchair_node
   ${catkin_LIBRARIES}
 )
 
